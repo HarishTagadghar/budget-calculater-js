@@ -22,6 +22,35 @@ let budgetcontroller = (function () {
         }
     }
 
+        return {
+            addItem: function(type,des,vlu){
+                let newItem , id ;
+                    
+                if (data.allitems[type].length > 0){
+                    id = data.allitems[type][data.allitems[type].length - 1].id + 1;
+
+                }else{
+                    id = 0
+                }
+                if(type === 'exp'){
+                    newItem = new Expenses(id,des,vlu)
+                }else if (type === 'inc'){
+                    newItem = new incomes(id,des,vlu)
+                }
+        
+
+
+                data.allitems[type].push(newItem);
+                return newItem;
+
+            },
+            view:function(){
+                console.log(data);
+                
+            }
+        }
+
+
 
 })(); // therse types of functions are called iifi function 
 
@@ -58,7 +87,8 @@ let uicontroller = (function () {
 let controller = (function (bdtctl, uictl) {
 
     let cntAddItem = function () {
-        console.log(uictl.getinput());
+        let input = uictl.getinput();
+        budgetcontroller.addItem(input.type,input.description,input.value);
     }
 
     let seteventlistener = function () {
