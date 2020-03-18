@@ -47,7 +47,10 @@ let seteventlistener = function(){
             cntAddItem()
         }
     })
-}
+} 
+
+
+
 
    
 return {
