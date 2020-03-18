@@ -1,29 +1,53 @@
-let budgetcontroller = (function(){
+let budgetcontroller = (function () {
+
+    let Expenses = function (id,description,value){
+        this.id = id;
+        this.description = description;
+        this.value = value ;
+    }
+    let incomes = function (id,description,value){
+        this.id = id;
+        this.description = description;
+        this.value = value ;
+    }
+
+    let data = {
+        allitems:{
+            exp:[],
+            inc:[]
+        },
+        total:{
+            exp:0,
+            inc:0
+        }
+    }
+
 
 })(); // therse types of functions are called iifi function 
 
 
+
 let uicontroller = (function () {
-    
+
     let domstring = {
-            inputtype:'.add__type',
-            inputdescription:'.add__description',
-            inputvalue:'.add__value',
-            inputbtn:'.add__btn'
+        inputtype: '.add__type',
+        inputdescription: '.add__description',
+        inputvalue: '.add__value',
+        inputbtn: '.add__btn'
     }
 
 
 
     return {
-        getinput: function (){
+        getinput: function () {
             return {
-                type : document.querySelector(domstring.inputtype).value,
-                description : document.querySelector(domstring.inputdescription).value,
-                value : document.querySelector(domstring.inputvalue).value
+                type: document.querySelector(domstring.inputtype).value,
+                description: document.querySelector(domstring.inputdescription).value,
+                value: document.querySelector(domstring.inputvalue).value
             }
         },
-        dominput : function(){
-           return domstring ;
+        dominput: function () {
+            return domstring;
         }
     }
 
@@ -31,41 +55,41 @@ let uicontroller = (function () {
 
 })();
 
-let controller = (function(bdtctl,uictl){
+let controller = (function (bdtctl, uictl) {
 
-    let cntAddItem = function (){
+    let cntAddItem = function () {
         console.log(uictl.getinput());
     }
 
-let seteventlistener = function(){
-    let dom = uictl.dominput();
+    let seteventlistener = function () {
+        let dom = uictl.dominput();
 
-    document.querySelector(dom.inputbtn).addEventListener('click',cntAddItem);
+        document.querySelector(dom.inputbtn).addEventListener('click', cntAddItem);
 
-    document.addEventListener('keypress',function(e){
-        if ( e.keyCode === 13){
-            cntAddItem()
-        }
-    })
-} 
-
-
-
-
-   
-return {
-    init : function(){
-        console.log('application is started');
-        seteventlistener();
-        
+        document.addEventListener('keypress', function (e) {
+            if (e.keyCode === 13) {
+                cntAddItem()
+            }
+        })
     }
-}   
-
-   
 
 
 
-})(budgetcontroller,uicontroller);
+
+
+    return {
+        init: function () {
+            console.log('application is started');
+            seteventlistener();
+
+        }
+    }
+
+
+
+
+
+})(budgetcontroller, uicontroller);
 
 
 controller.init();
