@@ -11,6 +11,15 @@ let budgetcontroller = (function () {
         this.value = value ;
     }
 
+
+    let calculatetotal = function(type){
+        let sum = 0 ;
+        data.allitems[type].forEach(function(currentitem){
+            sum += currentitem.value;
+        })
+        data.total[type] = sum
+    }
+
     let data = {
         allitems:{
             exp:[],
@@ -18,7 +27,9 @@ let budgetcontroller = (function () {
         },
         total:{
             exp:0,
-            inc:0
+            inc:0,
+            budget:0,
+            persantage:-1
         }
     }
 
@@ -43,6 +54,28 @@ let budgetcontroller = (function () {
                 data.allitems[type].push(newItem);
                 return newItem;
 
+            },
+            calculatebudget:function(){
+                
+                calculatetotal('inc');
+                calculatetotal('exp');
+
+                data.total.budget = data.total.inc -data.total.exp
+                    if(data.total.budget > 0 ){
+                        data.total.persantage = Math.round((data.total.exp / data.total.inc * 100))
+
+                    }else{
+                        data.total.persantage = -1
+                    }
+
+            },
+            getbudget:function(){
+              return {
+                budget : data.total.budget,
+                  totalinc: data.total.inc,
+                  totalexp : data.total.exp,
+                  persantage: data.total.persantage
+              }      
             },
             view:function(){
                 console.log(data);
@@ -108,6 +141,18 @@ let uicontroller = (function () {
 
 
         },
+        updatebudget:function(){
+            
+            //calculate budget
+               budgetcontroller.calculatebudget();
+            //return budget
+              let budgets =   budgetcontroller.getbudget();
+            //ui update
+            console.log(budgets);
+            
+
+
+        },
         dominput: function () {
             return domstring;
         }
@@ -125,6 +170,7 @@ let controller = (function (bdtctl, uictl) {
         let  newitem =  budgetcontroller.addItem(input.type,input.description,input.value);
         uictl.addNewItem(newitem,input.type);
         uictl.clearfeald();
+        uictl.updatebudget();
        }
         
     }
