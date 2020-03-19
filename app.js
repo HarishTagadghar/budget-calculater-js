@@ -74,7 +74,7 @@ let uicontroller = (function () {
             return {
                 type: document.querySelector(domstring.inputtype).value,
                 description: document.querySelector(domstring.inputdescription).value,
-                value: document.querySelector(domstring.inputvalue).value
+                value: parseFloat(document.querySelector(domstring.inputvalue).value)
             }
         },
         addNewItem: function (obj,type) {
@@ -121,10 +121,12 @@ let controller = (function (bdtctl, uictl) {
 
     let cntAddItem = function () {
         let input = uictl.getinput();
+       if(input.description !== "" && input.value > 0){
         let  newitem =  budgetcontroller.addItem(input.type,input.description,input.value);
         uictl.addNewItem(newitem,input.type);
         uictl.clearfeald();
-        bdtctl.view();
+       }
+        
     }
 
     let seteventlistener = function () {
