@@ -204,10 +204,12 @@ let uicontroller = (function () {
 
         },
         budgetui: function (obj) {
+            let type;
+            obj.budget > 0 ? type = 'inc' : type = 'exp';
 
-            document.querySelector(domstring.headerbudget).textContent = obj.budget;
-            document.querySelector(domstring.headerIncome).textContent = obj.totalinc;
-            document.querySelector(domstring.headerExpenses).textContent = obj.totalexp;
+            document.querySelector(domstring.headerbudget).textContent = formateNumber(obj.budget,type);
+            document.querySelector(domstring.headerIncome).textContent = formateNumber(obj.totalinc,'inc');
+            document.querySelector(domstring.headerExpenses).textContent = formateNumber(obj.totalexp,'exp');
             if (obj.totalinc > 0) {
                 document.querySelector(domstring.headerpersantage).textContent = obj.persantage + ' %';
             } else {
