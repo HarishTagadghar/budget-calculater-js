@@ -142,7 +142,19 @@ let uicontroller = (function () {
         deletecontainer: '.container',
         expensepercentage:'.item__percentage'
     }
+        
+        let formateNumber = function (num , type){
+            num = Math.abs(num);
+            num = num.toFixed(2);
+            numSplit = num.split('.');
+            let frontnum = numSplit[0];
+            if(frontnum.length > 3){
+                frontnum = frontnum.substr(0,frontnum.length - 3)+ ',' + frontnum.substr(frontnum.length - 3 , 3);
+            }
 
+            let secondnum = numSplit[1];
+            return (type === 'exp' ? '-' : '+') +  ' ' + frontnum + '.' + secondnum ;
+        }
 
 
     return {
@@ -166,7 +178,7 @@ let uicontroller = (function () {
 
             newhtml = html.replace('%ID%', obj.id);
             newhtml = newhtml.replace('%DESCRIPTION%', obj.description);
-            newhtml = newhtml.replace('%VALUE%', obj.value);
+            newhtml = newhtml.replace('%VALUE%', formateNumber( obj.value,type ));
 
             document.querySelector(element).insertAdjacentHTML('beforeend', newhtml)
         },
