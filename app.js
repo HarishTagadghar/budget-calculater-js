@@ -140,7 +140,8 @@ let uicontroller = (function () {
         headerExpenses: '.budget__expenses--value',
         headerpersantage: '.budget__expenses--percentage',
         deletecontainer: '.container',
-        expensepercentage:'.item__percentage'
+        expensepercentage:'.item__percentage',
+        day:'.budget__title--month'
     }
         
         let formateNumber = function (num , type){
@@ -234,6 +235,17 @@ let uicontroller = (function () {
             })
            
         },
+        displayDay:function(){
+            let now , year , monthIndex , months ;
+            
+            now = new Date();
+            year = now.getFullYear();
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            monthIndex = now.getMonth();
+        
+                document.querySelector(domstring.day).textContent = months[monthIndex] +' '+ year ;
+        },
+       
 
         dominput: function () {
             return domstring;
@@ -292,7 +304,8 @@ let controller = (function (bdtctl, uictl) {
                 cntAddItem()
             }
         })
-        document.querySelector(dom.deletecontainer).addEventListener('click', cntDeleteItem)
+        document.querySelector(dom.deletecontainer).addEventListener('click', cntDeleteItem);
+   
     }
 
 
@@ -320,6 +333,7 @@ let controller = (function (bdtctl, uictl) {
         init: function () {
             console.log('application is started');
             seteventlistener();
+            uictl.displayDay();
 
         }
     }
