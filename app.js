@@ -245,7 +245,19 @@ let uicontroller = (function () {
         
                 document.querySelector(domstring.day).textContent = months[monthIndex] +' '+ year ;
         },
-       
+        changeType : function(){
+                
+            let html = document.querySelectorAll(domstring.inputtype + ',' + domstring.inputdescription + ',' + domstring.inputvalue);
+            let listForEach = function(list , callback){
+                for(let i = 0 ; i < list.length ; i++){
+                    callback(list[i],i)
+                }
+            }
+            listForEach(html , function(currentitem){
+                currentitem.classList.toggle('red-focus')
+            });
+            document.querySelector(domstring.inputbtn).classList.toggle('red')
+        },
 
         dominput: function () {
             return domstring;
@@ -305,7 +317,7 @@ let controller = (function (bdtctl, uictl) {
             }
         })
         document.querySelector(dom.deletecontainer).addEventListener('click', cntDeleteItem);
-   
+        document.querySelector(dom.inputtype).addEventListener('change', uictl.changeType);
     }
 
 
