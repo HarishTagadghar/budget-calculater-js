@@ -4,7 +4,19 @@ let budgetcontroller = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1 ;
     }
+    Expenses.prototype.calcPercentage = function(totalinc){
+        if(totalinc > 0){
+          this.percentage =  Math.round((this.value / totalinc ) * 100 )
+        }else{
+            this.percentage = -1
+        }
+    }
+    Expenses.prototype.getPercentage = function (){
+        return this.percentage
+    }
+
     let incomes = function (id, description, value) {
         this.id = id;
         this.description = description;
@@ -69,6 +81,19 @@ let budgetcontroller = (function () {
             }
 
         },
+        calcPercentage: function(){
+            
+            data.allitems.exp.forEach(function(currentitem){
+                currentitem.calcPercentage(data.total.inc)
+            })
+
+        },
+        getPercentage:function(){
+            let allpercentage = data.allitems.exp.map(function(currentitem){
+                return currentitem.getPercentage();
+            })
+            return allpercentage
+        },
         getbudget: function () {
             return {
                 budget: data.total.budget,
@@ -114,7 +139,8 @@ let uicontroller = (function () {
         headerIncome: '.budget__income--value',
         headerExpenses: '.budget__expenses--value',
         headerpersantage: '.budget__expenses--percentage',
-        deletecontainer: '.container'
+        deletecontainer: '.container',
+        expensepercentage:'.item__percentage'
     }
 
 
@@ -134,7 +160,7 @@ let uicontroller = (function () {
                 html = '<div class="item clearfix" id="inc-%ID%"><div class="item__description">%DESCRIPTION%</div><div class="right clearfix"><div class="item__value">%VALUE%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             } else if (type === 'exp') {
                 element = domstring.appendExpense;
-                html = '<div class="item clearfix" id="exp-%ID%"><div class="item__description">%DESCRIPTION%</div><div class="right clearfix"><div class="item__value">%VALUE%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="exp-%ID%"><div class="item__description">%DESCRIPTION%</div><div class="right clearfix"><div class="item__value">%VALUE%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
 
             }
 
@@ -178,6 +204,22 @@ let uicontroller = (function () {
 
 
         },
+        displaypercentages:function(percentage){
+            let html = document.querySelectorAll(domstring.expensepercentage);
+            let listForEach = function(list , callback){
+                for(let i = 0 ; i < list.length ; i++){
+                    callback(list[i],i)
+                }
+            }
+            listForEach(html,function(currentitem,index){
+                if(percentage[index] > 0){
+                    currentitem.textContent = percentage[index]+'%';
+                }else{
+                    currentitem.textContent = '---'
+                }
+            })
+           
+        },
 
         dominput: function () {
             return domstring;
@@ -203,6 +245,16 @@ let controller = (function (bdtctl, uictl) {
 
 
     }
+    let updatePercentages = function(){
+        // calculate percentage 
+            bdtctl.calcPercentage();
+        //get percentages
+           let allpercentage =  bdtctl.getPercentage();
+        // update ui with percentage
+        uictl.displaypercentages(allpercentage)
+        
+        
+    }
     let cntAddItem = function () {
         let input = uictl.getinput();
 
@@ -211,6 +263,7 @@ let controller = (function (bdtctl, uictl) {
             uictl.addNewItem(newitem, input.type);
             uictl.clearfeald();
             updatebudget();
+            updatePercentages();
         }
 
     }
@@ -238,12 +291,13 @@ let controller = (function (bdtctl, uictl) {
             ID = parseInt(splitId[1])
             bdtctl.deleteItem(type, ID);
             uictl.deleteItemUi(item);
-           
 
 
-            updatebudget()
+
+            updatebudget();
+            updatePercentages();
         }
-      
+
 
     }
 
